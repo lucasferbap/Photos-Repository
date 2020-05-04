@@ -7,6 +7,7 @@ class RootFolderRepository extends Repository<RootFolder> {
         userId: string,
     ): Promise<RootFolder | undefined> {
         const rootFolder = this.createQueryBuilder('root_folder')
+            .leftJoinAndSelect('root_folder.user', 'user')
             .where('root_folder."userId" = :userId', { userId })
             .getOne();
         return rootFolder;
