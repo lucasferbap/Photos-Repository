@@ -3,9 +3,15 @@ import api from '../services/api';
 
 interface User {
   id: string;
-  avatar_url: string;
+  // avatar_url: string;
   name: string;
   email: string;
+  rootFolder: {
+    alias_name: string;
+    folder_name: string;
+    id: string;
+    path_name: string;
+  };
 }
 
 interface SignInCredentials {
@@ -29,8 +35,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem('@GoBarber:token');
-    const user = localStorage.getItem('@GoBarber:user');
+    const token = localStorage.getItem('@PhotoRepository:token');
+    const user = localStorage.getItem('@PhotoRepository:user');
 
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
@@ -44,22 +50,22 @@ const AuthProvider: React.FC = ({ children }) => {
   const signIn = useCallback(async ({ email, password }) => {
     const response = await api.post('sessions', { email, password });
     const { token, user } = response.data;
-    localStorage.setItem('@GoBarber:token', token);
-    localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+    localStorage.setItem('@PhotoRepository:token', token);
+    localStorage.setItem('@PhotoRepository:user', JSON.stringify(user));
     api.defaults.headers.authorization = `Bearer ${token}`;
     setData({ token, user });
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@GoBarber:token');
-    localStorage.removeItem('@GoBarber:user');
+    localStorage.removeItem('@PhotoRepository:token');
+    localStorage.removeItem('@PhotoRepository:user');
 
     setData({} as AuthState);
   }, []);
 
   const updateUser = useCallback(
     (user: User) => {
-      localStorage.setItem('@GoBarber:user', JSON.stringify(user));
+      localStorage.setItem('@PhotoRepository:user', JSON.stringify(user));
       setData({
         token: data.token,
         user,
