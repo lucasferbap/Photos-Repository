@@ -1,10 +1,15 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import {
+    MigrationInterface,
+    QueryRunner,
+    Table,
+    TableForeignKey,
+} from 'typeorm';
 
-export default class User1591744901901 implements MigrationInterface {
+export default class Albuns1596596048261 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: 'users',
+                name: 'albuns',
                 columns: [
                     {
                         name: 'id',
@@ -14,21 +19,20 @@ export default class User1591744901901 implements MigrationInterface {
                         default: 'uuid_generate_v4()',
                     },
                     {
-                        name: 'name',
+                        name: 'album_name',
                         type: 'varchar',
                     },
                     {
-                        name: 'password',
+                        name: 'alias_name',
                         type: 'varchar',
                     },
                     {
-                        name: 'email',
+                        name: 'path_name',
                         type: 'varchar',
-                        isUnique: true,
                     },
                     {
-                        name: 'avatar_url',
-                        type: 'varchar',
+                        name: 'rootFolderId',
+                        type: 'uuid',
                     },
                     {
                         name: 'created_at',
@@ -43,9 +47,22 @@ export default class User1591744901901 implements MigrationInterface {
                 ],
             }),
         );
+
+        await queryRunner.createForeignKey(
+            'albuns',
+            new TableForeignKey({
+                name: 'rootfolderId',
+                columnNames: ['rootFolderId'],
+                referencedColumnNames: ['id'],
+                referencedTableName: 'root_folders',
+                onDelete: 'CASCADE',
+                onUpdate: 'CASCADE',
+            }),
+        );
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable('users');
+        await queryRunner.dropForeignKey('albuns', 'rootfolderId');
+        await queryRunner.dropTable('albuns');
     }
 }

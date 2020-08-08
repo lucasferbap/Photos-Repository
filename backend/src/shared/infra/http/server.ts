@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import 'dotenv/config';
+import path from 'path';
 import cors from 'cors';
 import express, { NextFunction, Request, Response } from 'express';
 import { errors } from 'celebrate';
@@ -7,7 +8,7 @@ import 'express-async-errors';
 import routes from './routes';
 import '../../container';
 import '../typeorm';
-import upload from '../../../config/upload';
+
 import AppError from '../../errors/AppError';
 import rateLimiter from './middlewares/rateLimiter';
 
@@ -15,7 +16,20 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/files', express.static(upload.tempFolder));
+app.use(
+    '/uploads',
+    express.static(
+        path.resolve(
+            __dirname,
+            '..',
+            '..',
+            '..',
+            '..',
+            'uploads',
+            'defaultAvatar',
+        ),
+    ),
+);
 app.use(rateLimiter);
 
 app.use(routes);

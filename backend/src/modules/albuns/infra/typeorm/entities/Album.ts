@@ -1,37 +1,34 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     Entity,
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToOne,
     JoinColumn,
+    ManyToOne,
 } from 'typeorm';
+import Rootfolder from '../../../../users/infra/typeorm/entities/RootFolder';
 
-import { Exclude } from 'class-transformer';
-import Rootfolder from './RootFolder';
-
-@Entity('users')
-class User {
+@Entity('albuns')
+class Album {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    name: string;
+    album_name: string;
 
     @Column()
-    @Exclude()
-    password: string;
+    alias_name: string;
 
     @Column()
-    email: string;
+    path_name: string;
 
-    @OneToOne(type => Rootfolder, { cascade: ['insert', 'remove'] })
+    @ManyToOne(type => Rootfolder, rootFolder => rootFolder.albuns, {
+        cascade: ['remove'],
+    })
     @JoinColumn()
     rootFolder: Rootfolder;
-
-    @Column()
-    avatar_url: string;
 
     @CreateDateColumn()
     created_at: Date;
@@ -40,4 +37,4 @@ class User {
     updated_at: Date;
 }
 
-export default User;
+export default Album;

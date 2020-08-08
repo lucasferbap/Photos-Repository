@@ -4,7 +4,9 @@ import {
     Column,
     CreateDateColumn,
     UpdateDateColumn,
+    OneToMany,
 } from 'typeorm';
+import Album from '../../../../albuns/infra/typeorm/entities/Album';
 
 @Entity('root_folders')
 export default class Rootfolder {
@@ -19,6 +21,9 @@ export default class Rootfolder {
 
     @Column()
     path_name: string;
+
+    @OneToMany(type => Album, album => album.rootFolder)
+    albuns: Album[];
 
     @CreateDateColumn()
     created_at: Date;

@@ -3,7 +3,6 @@ import User from '../entities/User';
 import IUserRepository from '../../../repositories/IUsersRepository';
 import ICreateUsersDTO from '../../../dtos/ICreateUsersDTO';
 import Rootfolder from '../entities/RootFolder';
-import rootFolderConfig from '../../../../../config/root_folder';
 
 class UsersRepository implements IUserRepository {
     private ormRepository: Repository<User>;
@@ -16,20 +15,19 @@ class UsersRepository implements IUserRepository {
         name,
         email,
         password,
+        rootFolderPathName,
+        rootFolderName,
     }: ICreateUsersDTO): Promise<User> {
         const rootFolder = new Rootfolder();
-        const rootFolderData = await rootFolderConfig(
-            name,
-            `Pasta de fotos de ${name}`,
-        );
-        rootFolder.path_name = rootFolderData.path_name;
-        rootFolder.folder_name = rootFolderData.folder_name;
-        rootFolder.alias_name = rootFolderData.alias_name;
+        rootFolder.path_name = rootFolderPathName;
+        rootFolder.folder_name = rootFolderName;
+        rootFolder.alias_name = `Pasta de fotos de ${name}`;
 
         const user = this.ormRepository.create({
             name,
             email,
             password,
+            avatar_url: 'http://localhost:3333/uploads/defaultAvatar.png',
             rootFolder,
         });
 
@@ -41,6 +39,13 @@ class UsersRepository implements IUserRepository {
     public async findByEmail(email: string): Promise<User | undefined> {
         return this.ormRepository.findOne({
             where: { email },
+            relations: ['rootFolder'],
+        });
+    }
+
+    public async findById(id: string): Promise<User | undefined> {
+        return this.ormRepository.findOne({
+            where: { id },
             relations: ['rootFolder'],
         });
     }

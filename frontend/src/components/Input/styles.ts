@@ -2,9 +2,9 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   border-radius: 10px;
-  border: 2px solid #232129;
+  border: 2px solid white;
   padding: 5px;
-  width: 100%;
+  width: 50%;
   color: #666360;
   display: flex;
   align-items: center;
@@ -17,10 +17,10 @@ export const Container = styled.div`
     flex: 1;
     background: transparent;
     border: 0;
-    color: black;
+    color: white;
 
     &::placeholder {
-      color: #666360;
+      color: white;
     }
   }
 `;
