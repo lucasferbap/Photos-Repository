@@ -12,6 +12,22 @@ class AlbunsRepository implements IAlbumRepository {
         this.ormRepository = getRepository(Album);
     }
 
+    public async deleteAlbumById(albumId: string): Promise<void> {
+        await this.ormRepository.delete({ id: albumId });
+    }
+
+    public async findByAlbumName(
+        albumName: string,
+    ): Promise<Album | undefined> {
+        const album = await this.ormRepository.findOne({
+            where: {
+                album_name: albumName,
+            },
+        });
+
+        return album;
+    }
+
     public async create({
         aliasName,
         rootFolder,

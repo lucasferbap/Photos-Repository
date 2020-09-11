@@ -32,7 +32,8 @@ export default class CreateAlbumService {
         const albumName = this.pathMaker.makeName(aliasName);
 
         // Montar o PathName
-        const pathName = await this.pathMaker.makePath(
+        const pathName = this.pathMaker.makePath(
+            true,
             user?.rootFolder.folder_name,
             albumName,
         );

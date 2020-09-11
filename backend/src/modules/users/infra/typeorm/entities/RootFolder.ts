@@ -7,6 +7,7 @@ import {
     OneToMany,
 } from 'typeorm';
 import Album from '../../../../albuns/infra/typeorm/entities/Album';
+import Photo from '../../../../photos/infra/typeorm/entities/Photos';
 
 @Entity('root_folders')
 export default class Rootfolder {
@@ -24,6 +25,9 @@ export default class Rootfolder {
 
     @OneToMany(type => Album, album => album.rootFolder)
     albuns: Album[];
+
+    @OneToMany(type => Photo, photo => photo.rootFolder)
+    photos: Photo[];
 
     @CreateDateColumn()
     created_at: Date;

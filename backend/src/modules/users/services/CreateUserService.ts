@@ -29,7 +29,8 @@ class CreateUserService {
             throw new AppError('Email address already used');
         }
         const rootFolderName = this.pathMaker.makeName(name);
-        const rootFolderPathName = await this.pathMaker.makePath(
+        const rootFolderPathName = this.pathMaker.makePath(
+            true,
             rootFolderName,
         );
 

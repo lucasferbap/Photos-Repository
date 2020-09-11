@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import Album from '../infra/typeorm/entities/Album';
-import IUsersRepository from '../../users/repositories/IUsersRepository';
+// import IUsersRepository from '../../users/repositories/IUsersRepository';
 import IAlbunsRepository from '../repositories/IAlbunsRepository';
 
 @injectable()

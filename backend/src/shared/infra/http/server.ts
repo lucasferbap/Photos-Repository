@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import 'reflect-metadata';
 import 'dotenv/config';
 import path from 'path';
@@ -12,7 +13,7 @@ import '../typeorm';
 import AppError from '../../errors/AppError';
 import rateLimiter from './middlewares/rateLimiter';
 
-const app = express();
+export const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -30,7 +31,8 @@ app.use(
         ),
     ),
 );
-app.use(rateLimiter);
+
+// app.use(rateLimiter);
 
 app.use(routes);
 

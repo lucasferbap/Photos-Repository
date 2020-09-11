@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from 'react';
 import {
   RouteProps as ReactDOMRouterProps,
@@ -17,6 +18,7 @@ const Route: React.FC<RouteProps> = ({
   ...rest
 }) => {
   const { user } = useAuth();
+
   return (
     <ReactDOMRoute
       {...rest}

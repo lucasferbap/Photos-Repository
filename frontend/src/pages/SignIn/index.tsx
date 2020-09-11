@@ -2,14 +2,14 @@ import React, { useRef, useCallback } from 'react';
 
 import { Link, useHistory } from 'react-router-dom';
 import { Form } from '@unform/web';
-
+import { FiMail, FiLock } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import * as yup from 'yup';
 import { Container, FormContainer } from './styles';
-import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { useToast } from '../../hooks/Toast';
 import { useAuth } from '../../hooks/Auth';
+import InputLogin from '../../components/LoginInput';
 
 interface SignInFormData {
   email: string;
@@ -72,8 +72,13 @@ const SignIn: React.FC = () => {
       <FormContainer>
         <p>Faça o seu login</p>
         <Form onSubmit={handleSubmit}>
-          <Input name="email" placeholder="E-mail" />
-          <Input name="password" type="password" placeholder="Senha" />
+          <InputLogin name="email" placeholder="E-mail" icon={FiMail} />
+          <InputLogin
+            name="password"
+            type="password"
+            placeholder="Senha"
+            icon={FiLock}
+          />
           <Button type="submit">ENTRAR</Button>
         </Form>
         <a href="facebook.com">Esqueceu a senha?</a>

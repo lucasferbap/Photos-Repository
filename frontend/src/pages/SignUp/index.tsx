@@ -1,9 +1,12 @@
 import React, { useCallback, useRef } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { FiMail, FiLock, FiUser } from 'react-icons/fi';
+
 import { Form } from '@unform/web';
 import * as yup from 'yup';
 import { FormHandles } from '@unform/core';
-import Input from '../../components/Input';
+import InputLogin from '../../components/LoginInput';
+
 import Button from '../../components/Button';
 
 import { Container, FormContainer } from './styles';
@@ -77,9 +80,14 @@ const SignUp: React.FC = () => {
       <FormContainer>
         <Form onSubmit={handleSubmit}>
           <p>Crie o seu cadastro na plataforma</p>
-          <Input name="name" placeholder="Nome" />
-          <Input name="email" placeholder="E-mail" />
-          <Input name="password" type="password" placeholder="Senha" />
+          <InputLogin name="name" placeholder="Nome" icon={FiUser} />
+          <InputLogin name="email" placeholder="E-mail" icon={FiMail} />
+          <InputLogin
+            name="password"
+            type="password"
+            placeholder="Senha"
+            icon={FiLock}
+          />
           <Button type="submit">CADASTRAR</Button>
         </Form>
       </FormContainer>

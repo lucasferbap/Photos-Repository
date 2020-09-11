@@ -15,7 +15,10 @@ export default function ensureAuthenticated(
     next: NextFunction,
 ): void {
     // validação do token jwt
-    const authHeader = request.headers.authorization;
+    const authHeader = request.headers.authorization
+        ? request.headers.authorization
+        : `Bearer ${request.headers.cookie?.split('=')[1]}`;
+    console.log('akiii', authHeader);
     if (!authHeader) {
         throw new AppError('JWT Token is missing', 401);
     }

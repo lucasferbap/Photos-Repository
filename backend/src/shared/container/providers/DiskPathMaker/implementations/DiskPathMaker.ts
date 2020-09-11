@@ -1,6 +1,7 @@
+/* eslint-disable no-unused-expressions */
 import crypto from 'crypto';
 import path from 'path';
-import mkdirp from 'mkdirp';
+import fs from 'fs';
 import IPathMaker from '../models/IPathMaker';
 
 export default class DiskPathMaker implements IPathMaker {
@@ -10,10 +11,12 @@ export default class DiskPathMaker implements IPathMaker {
             .toString('HEX')} - ${Date.now()}`;
     }
 
-    public async makePath(
+    public makePath(
+        createPath: boolean,
         rootFolderName?: string,
         albumName?: string,
-    ): Promise<string> {
+        photoName?: string,
+    ): string {
         const pathName = path.resolve(
             __dirname,
             '..',
@@ -25,8 +28,25 @@ export default class DiskPathMaker implements IPathMaker {
             'uploads',
             rootFolderName || '',
             albumName || '',
+            photoName || '',
         );
-        mkdirp(pathName);
+        if (createPath) {
+            fs.mkdirSync(pathName);
+        }
         return pathName;
+    }
+
+    public async moveArchive(oldPath: string, newPath: string): Promise<void> {
+        fs.rename(oldPath, newPath, error => {
+            console.log(error);
+        });
+    }
+
+    public deleteFolder(pathName: string): void {
+        fs.rmdirSync(pathName);
+    }
+
+    public deleteFile(pathName: string): void {
+        fs.unlinkSync(pathName);
     }
 }

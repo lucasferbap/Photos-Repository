@@ -1,9 +1,11 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FiLogOut, FiXCircle } from 'react-icons/fi';
 import { Form } from '@unform/web';
-import { FormHandles } from '@unform/core';
+
 import { useAuth } from '../../hooks/Auth';
+import Image from '../../components/PhotosGrid';
 
 import api from '../../services/api';
 import {
@@ -16,9 +18,10 @@ import {
   Albuns,
   Album,
   AddNewAlbum,
+  EmptyRootFolder,
+  AddButtons,
 } from './styles';
 import Input from '../../components/Input';
-import Button from '../../components/Button';
 import { useToast } from '../../hooks/Toast';
 
 interface Album {
@@ -29,21 +32,40 @@ interface Album {
   created_at: Date;
 }
 
+export interface Photo {
+  id: string;
+  alias_name: string;
+  path_name: string;
+  url: string;
+}
+
 const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
   const { addToast } = useToast();
-  const formRef = useRef<FormHandles>(null);
 
   const [usersAlbuns, setUsersAlbuns] = useState<Album[]>([]);
+
+  const [rootFolderPhotosInfos, setRootFolderPhotosInfos] = useState<Photo[]>(
+    [],
+  );
+
   const [openAddNewAlbumWindow, setOpenAddNewAlbumWindow] = useState<boolean>(
-    true,
+    false,
   );
 
   const loadAlbuns = useCallback(async () => {
     const { data: albuns } = await api.get<Album[]>('/albuns');
     setUsersAlbuns(albuns);
-    console.log(albuns);
   }, []);
+
+  const loadRootFolderPhotosInfos = useCallback(async () => {
+    const { data: photos } = await api.get<Photo[]>('/photos', {
+      params: {
+        rootFolder: user.rootFolder.folder_name,
+      },
+    });
+    setRootFolderPhotosInfos(photos);
+  }, [user.rootFolder.folder_name]);
 
   const handleOpenAddAlbumWindow = useCallback(() => {
     setOpenAddNewAlbumWindow(true);
@@ -53,27 +75,52 @@ const Dashboard: React.FC = () => {
     setOpenAddNewAlbumWindow(false);
   }, []);
 
-  const handleCreateNewAlbum = useCallback(async (aliasName: string) => {
-    try {
-      await api.post('/albuns', aliasName);
-      addToast({
-        type: 'success',
-        title: 'Álbum criado com sucesso',
-      });
-      setOpenAddNewAlbumWindow(false);
-      loadAlbuns();
-    } catch (error) {
-      addToast({
-        type: 'error',
-        title: 'Ocorreu um erro ao criar o álbum',
-      });
-      console.log(error);
-    }
-  }, []);
+  const handleCreateNewAlbum = useCallback(
+    async (aliasName: string) => {
+      try {
+        const { data } = await api.post('/albuns', aliasName);
+        setUsersAlbuns([...usersAlbuns, data]);
+        addToast({
+          type: 'success',
+          title: 'Álbum criado com sucesso',
+        });
+        setOpenAddNewAlbumWindow(false);
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro ao criar o álbum',
+        });
+      }
+    },
+    [addToast, usersAlbuns],
+  );
+
+  const handleDeleteAlbum = useCallback(
+    async (albumId: string, filePath: string) => {
+      try {
+        await api.delete(`/albuns/${albumId}`, { data: { filePath } });
+        const albumIndex = usersAlbuns.findIndex(album => album.id === albumId);
+        usersAlbuns.splice(albumIndex, 1);
+        const newAlbuns = usersAlbuns;
+        setUsersAlbuns(newAlbuns);
+        addToast({
+          type: 'success',
+          title: 'Álbum excuído com sucesso',
+        });
+      } catch (error) {
+        addToast({
+          type: 'error',
+          title: 'Ocorreu um erro ao excluir o álbum',
+        });
+      }
+    },
+    [addToast, usersAlbuns],
+  );
 
   useEffect(() => {
     loadAlbuns();
-  }, [loadAlbuns]);
+    loadRootFolderPhotosInfos();
+  }, [loadAlbuns, loadRootFolderPhotosInfos]);
 
   return (
     <Container>
@@ -103,13 +150,47 @@ const Dashboard: React.FC = () => {
           </AddAlbumButton>
         </ContentHeader>
         <Albuns>
-          {usersAlbuns.map(userAlbum => (
-            <Album key={userAlbum.id}>
-              <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
-              <p>{userAlbum.alias_name}</p>
-            </Album>
-          ))}
+          {usersAlbuns.length === 0 ? (
+            <EmptyRootFolder>
+              <p>Não há álbuns na sua pasta de fotos</p>
+              <AddButtons>
+                <p>
+                  Adicionar um novo álbum
+                  <button type="button" onClick={handleOpenAddAlbumWindow}>
+                    <img src="https://img.icons8.com/ios/50/000000/add-folder.png" />
+                  </button>
+                </p>
+
+                <p>Ou</p>
+                <p>
+                  Adicionar Fotos
+                  <button type="button">
+                    <img src="https://img.icons8.com/wired/64/000000/add-image.png" />
+                  </button>
+                </p>
+              </AddButtons>
+            </EmptyRootFolder>
+          ) : (
+            usersAlbuns.map(userAlbum => (
+              <Album key={userAlbum.id}>
+                <button
+                  type="button"
+                  onClick={
+                    () => handleDeleteAlbum(userAlbum.id, userAlbum.path_name)
+                    // eslint-disable-next-line react/jsx-curly-newline
+                  }
+                >
+                  <FiXCircle />
+                </button>
+
+                <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
+                <p>{userAlbum.alias_name}</p>
+              </Album>
+            ))
+          )}
         </Albuns>
+
+        <Image photosInfos={rootFolderPhotosInfos} />
       </Content>
 
       {openAddNewAlbumWindow && (
@@ -127,20 +208,6 @@ const Dashboard: React.FC = () => {
         </AddNewAlbum>
       )}
     </Container>
-
-    // <>
-
-    //   <p>{user.email}</p>
-    //   <p>{user.rootFolder.path_name}</p>
-    //   <p>
-    //     alias name:
-    //     {user.rootFolder.alias_name}
-    //   </p>
-
-    //   <button onClick={signOut} type="button">
-    //     sair
-    //   </button>
-    // </>
   );
 };
 

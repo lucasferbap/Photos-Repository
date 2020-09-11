@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useState, useContext } from 'react';
+import moment from 'moment';
 import api from '../services/api';
 
 interface User {
@@ -26,6 +27,7 @@ interface AuthState {
 
 interface AuthContextData {
   user: User;
+  token: string;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   updateUser(user: User): void;
@@ -37,7 +39,6 @@ const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
     const token = localStorage.getItem('@PhotoRepository:token');
     const user = localStorage.getItem('@PhotoRepository:user');
-
     if (token && user) {
       api.defaults.headers.authorization = `Bearer ${token}`;
 
@@ -53,13 +54,14 @@ const AuthProvider: React.FC = ({ children }) => {
     localStorage.setItem('@PhotoRepository:token', token);
     localStorage.setItem('@PhotoRepository:user', JSON.stringify(user));
     api.defaults.headers.authorization = `Bearer ${token}`;
+    document.cookie = `token=${token}; expires=${moment().add(1, 'days')}`;
     setData({ token, user });
   }, []);
 
   const signOut = useCallback(() => {
     localStorage.removeItem('@PhotoRepository:token');
     localStorage.removeItem('@PhotoRepository:user');
-
+    document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC';
     setData({} as AuthState);
   }, []);
 
@@ -76,7 +78,13 @@ const AuthProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user: data.user, signIn, signOut, updateUser }}
+      value={{
+        user: data.user,
+        token: data.token,
+        signIn,
+        signOut,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

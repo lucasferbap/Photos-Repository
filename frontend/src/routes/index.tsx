@@ -7,16 +7,18 @@ import Dashboard from '../pages/Dashboard';
 
 import Route from './Route';
 
-const Routes: React.FC = () => (
-  <Switch>
-    <Route path="/" exact component={SingIn} />
-    <Route path="/signup" component={SingUp} />
-    {/* <Route path="/forgot-password" component={ForgotPassword} />
+const Routes: React.FC = () => {
+  return (
+    <Switch>
+      <Route path="/" exact component={SingIn} />
+      <Route path="/signup" component={SingUp} />
+      {/* <Route path="/forgot-password" component={ForgotPassword} />
     <Route path="/reset-password" component={ResetPassword} /> */}
 
-    <Route path="/dashboard" component={Dashboard} isPrivate />
-    {/* <Route path="/profile" component={Profile} isPrivate /> */}
-  </Switch>
-);
+      <Route path="/dashboard" component={Dashboard} isPrivate />
+      {/* <Route path="/profile" component={Profile} isPrivate /> */}
+    </Switch>
+  );
+};
 
 export default Routes;

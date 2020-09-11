@@ -9,5 +9,6 @@ const albunsController = new AlbunsController();
 
 usersRouter.post('/', ensureAuth, albunsController.create);
 usersRouter.get('/', ensureAuth, albunsController.listAll);
+usersRouter.delete('/:id', ensureAuth, albunsController.delete);
 
 export default usersRouter;

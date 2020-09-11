@@ -14,7 +14,7 @@ const appearFromLeft = keyframes`
 
 export const Container = styled.div`
   animation: ${appearFromLeft} 0.5s;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,26 +103,41 @@ export const AddAlbumButton = styled.div`
 `;
 
 export const Albuns = styled.div`
-  animation: ${appearFromLeft} 1s;
   /* border: 1px solid black; */
-  width: 80%;
-  margin-top: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  div {
-    margin-bottom: 50px;
+
+  animation: ${appearFromLeft} 1s;
+  margin-top: 90px;
+  margin-bottom: 90px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  @media (max-width: 800px) {
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
 export const Album = styled.div`
   /* border: 1px solid black; */
+  align-content: center;
   display: flex;
-  width: 25%;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  button {
+    margin-left: auto;
+    margin-bottom: 0px;
+    display: flex;
+    align-items: center;
+
+    background: transparent;
+    border: 0;
+    opacity: 0;
+  }
+  &:hover button {
+    opacity: 1;
+  }
 `;
 
 export const AddNewAlbum = styled.div`
@@ -156,6 +171,38 @@ export const AddNewAlbum = styled.div`
       border: 0;
       padding: 10px;
       border-radius: 10px;
+    }
+  }
+`;
+
+export const EmptyRootFolder = styled.div`
+  width: 100%;
+  height: 100%;
+  /* border: 1px solid black; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const AddButtons = styled.div`
+  /* border: 1px solid black; */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    button {
+      margin-left: 10px;
+      background: transparent;
+      border: 0;
+      img {
+        width: 20px;
+      }
     }
   }
 `;

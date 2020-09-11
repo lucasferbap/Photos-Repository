@@ -7,8 +7,10 @@ import {
     UpdateDateColumn,
     JoinColumn,
     ManyToOne,
+    OneToMany,
 } from 'typeorm';
 import Rootfolder from '../../../../users/infra/typeorm/entities/RootFolder';
+import Photo from '../../../../photos/infra/typeorm/entities/Photos';
 
 @Entity('albuns')
 class Album {
@@ -29,6 +31,9 @@ class Album {
     })
     @JoinColumn()
     rootFolder: Rootfolder;
+
+    @OneToMany(type => Photo, photo => photo.album)
+    photos: Photo[];
 
     @CreateDateColumn()
     created_at: Date;
