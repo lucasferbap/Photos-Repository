@@ -1,6 +1,21 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+// import { Slide } from 'react-awesome-reveal';
+
+const appearFromLeft = keyframes`
+  from{
+    opacity: 0;
+    transform: translateX(-500px)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px)
+  }
+`;
 
 export const Container = styled.div`
+  animation: ${appearFromLeft} 0.5s;
+
   background-color: rgba(0, 0, 0, 0.9);
   position: absolute;
   top: 0%;

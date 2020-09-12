@@ -1,7 +1,21 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const appearFromLeft = keyframes`
+  from{
+    opacity: 0;
+    transform: translateX(-500px)
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0px)
+  }
+`;
 
 export const Container = styled.div`
   /* border: 1px solid black; */
+
+  animation: ${appearFromLeft} 0.5s;
 
   width: 100%;
   display: grid;

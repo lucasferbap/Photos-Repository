@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import Gallery from '../components/PhotoGallery';
+import PhotoGallery from '../components/PhotoGallery';
 
 interface GalleryContextData {
   openGallery(ph: Photo[], ind: number): void;
@@ -36,7 +36,9 @@ const GalleryProvider: React.FC = ({ children }) => {
   return (
     <GalleryContext.Provider value={{ openGallery, closeGallery }}>
       {children}
-      {openPhotoGallery && <Gallery photosInfos={photos} photoIndex={index} />}
+      {openPhotoGallery && (
+        <PhotoGallery photosInfos={photos} photoIndex={index} />
+      )}
     </GalleryContext.Provider>
   );
 };

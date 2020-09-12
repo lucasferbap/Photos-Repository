@@ -16,11 +16,14 @@ interface Photo {
 interface GalleryProps {
   photosInfos: Photo[];
   photoIndex: number;
+  // style: object;
 }
 
-const PhotoGallery: React.FC<GalleryProps> = ({ photosInfos, photoIndex }) => {
-  // const galleryWithTransition = useTransition()
-
+const PhotoGallery: React.FC<GalleryProps> = ({
+  photosInfos,
+  photoIndex,
+  // style,
+}) => {
   const { closeGallery } = useGallery();
 
   const [photos, setPhotos] = useState<Photo[]>(photosInfos);
