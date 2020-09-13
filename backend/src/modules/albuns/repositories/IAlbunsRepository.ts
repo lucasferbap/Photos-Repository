@@ -9,5 +9,6 @@ export default interface IAlbunsRepository {
     ): Promise<Album | undefined>;
     findAllUserAlbunsByUserId(userId: string): Promise<Album[] | undefined>;
     findByAlbumName(albumName: string): Promise<Album | undefined>;
+    findById(albumId: string): Promise<Album | undefined>;
     deleteAlbumById(albumId: string): Promise<void>;
 }

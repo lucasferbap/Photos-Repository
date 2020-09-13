@@ -78,6 +78,14 @@ class AlbunsRepository implements IAlbumRepository {
 
         return albuns;
     }
+
+    public async findById(albumId: string): Promise<Album | undefined> {
+        const album = await this.ormRepository.findOne(
+            { id: albumId },
+            { relations: ['photos'] },
+        );
+        return album;
+    }
 }
 
 export default AlbunsRepository;

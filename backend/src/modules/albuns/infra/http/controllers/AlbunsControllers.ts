@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import CreateAlbumService from '../../../services/CreateAlbumService';
 import ListAllUserAlbunsService from '../../../services/LIstAllUserAlbunsService';
 import DeleteAlbumService from '../../../services/DeleteAbumService';
+import ListAlbumService from '../../../services/ListAlbumService';
 
 export default class AlbunsController {
     public async create(
@@ -24,6 +25,16 @@ export default class AlbunsController {
         const albumService = container.resolve(ListAllUserAlbunsService);
         const albuns = await albumService.execute(id);
         return response.json(albuns);
+    }
+
+    public async getOne(
+        request: Request,
+        response: Response,
+    ): Promise<Response> {
+        const { albumId } = request.params;
+        const albumService = container.resolve(ListAlbumService);
+        const album = await albumService.execute(albumId);
+        return response.json(album);
     }
 
     public async delete(

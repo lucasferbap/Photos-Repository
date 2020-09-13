@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useCallback, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import { FiLogOut, FiXCircle } from 'react-icons/fi';
 import { Form } from '@unform/web';
 
@@ -20,6 +22,7 @@ import {
   AddNewAlbum,
   EmptyRootFolder,
   AddButtons,
+  OpenAlbumButton,
 } from './styles';
 import Input from '../../components/Input';
 import { useToast } from '../../hooks/Toast';
@@ -175,6 +178,7 @@ const Dashboard: React.FC = () => {
               <Album key={userAlbum.id}>
                 <button
                   type="button"
+                  className="delete-album"
                   onClick={
                     () => handleDeleteAlbum(userAlbum.id, userAlbum.path_name)
                     // eslint-disable-next-line react/jsx-curly-newline
@@ -183,8 +187,10 @@ const Dashboard: React.FC = () => {
                   <FiXCircle />
                 </button>
 
-                <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
-                <p>{userAlbum.alias_name}</p>
+                <Link to={`/album/${userAlbum.id}`}>
+                  <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
+                  <p>{userAlbum.alias_name}</p>
+                </Link>
               </Album>
             ))
           )}

@@ -126,6 +126,14 @@ export const Album = styled.div`
   align-items: center;
   justify-content: center;
 
+  a {
+    color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   button {
     margin-left: auto;
     margin-bottom: 0px;
@@ -206,4 +214,9 @@ export const AddButtons = styled.div`
       }
     }
   }
+`;
+
+export const OpenAlbumButton = styled.button`
+  background: transparent;
+  border: none;
 `;

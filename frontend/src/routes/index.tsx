@@ -6,6 +6,7 @@ import SingUp from '../pages/SignUp';
 import Dashboard from '../pages/Dashboard';
 
 import Route from './Route';
+import Album from '../pages/Album';
 
 const Routes: React.FC = () => {
   return (
@@ -16,7 +17,7 @@ const Routes: React.FC = () => {
     <Route path="/reset-password" component={ResetPassword} /> */}
 
       <Route path="/dashboard" component={Dashboard} isPrivate />
-      {/* <Route path="/profile" component={Profile} isPrivate /> */}
+      <Route path="/album/:id" component={Album} isPrivate />
     </Switch>
   );
 };
