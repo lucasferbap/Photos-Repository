@@ -4,8 +4,8 @@
         "host": "localhost",
         "port": 5432,
         "username": "postgres",
-        "password": "@Lucas94",
-        "database": "projeto_pessoal",
+        "password": "docker",
+        "database": "projeto_pessoa",
         "entities": [
             "./src/modules/**/infra/typeorm/entities/*.ts"
         ],

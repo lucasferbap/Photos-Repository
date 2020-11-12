@@ -21,14 +21,15 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 30px;
+  margin-top: 50px;
 
-  @media (max-width: 800px) {
+  @media (max-width: 600px) {
     grid-template-columns: 1fr 1fr;
   }
 
-  @media (max-width: 600px) {
+  /* @media (max-width: 600px) {
     grid-template-columns: 1fr;
-  }
+  } */
 
   div {
     display: flex;
@@ -55,11 +56,7 @@ export const Container = styled.div`
     }
 
     .deletePhoto {
-      margin-left: auto;
-      margin-bottom: 0px;
-      display: flex;
-      align-items: center;
-
+      margin-left: 150px;
       background: transparent;
       border: 0;
       opacity: 0;
@@ -76,4 +73,11 @@ export const PhotoContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+  cursor: pointer;
 `;

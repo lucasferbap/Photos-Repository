@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 
 import { FiChevronRight, FiChevronLeft, FiXCircle } from 'react-icons/fi';
 
-import { Container, ImgContainer, Description } from './styles';
+import { Container, ImgContainer, NavigationButtons } from './styles';
 import { useGallery } from '../../hooks/Gallery';
 
 interface Photo {
@@ -26,11 +26,14 @@ const PhotoGallery: React.FC<GalleryProps> = ({
 }) => {
   const { closeGallery } = useGallery();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [photos, setPhotos] = useState<Photo[]>(photosInfos);
   const [index, setIndex] = useState<number>(photoIndex);
 
   const nextPhoto = useCallback(() => {
     if (index >= photos.length - 1) {
+      console.log('foi');
+
       setIndex(0);
     } else {
       setIndex(index + 1);
@@ -47,7 +50,20 @@ const PhotoGallery: React.FC<GalleryProps> = ({
 
   return (
     <Container>
-      <button type="button" onClick={closeGallery}>
+      <button type="button" className="Close-Gallery" onClick={closeGallery}>
+        <FiXCircle color="#ffffff" />
+      </button>
+      <ImgContainer>
+        <img src={photos[index].url} alt="" />
+      </ImgContainer>
+
+      <NavigationButtons>
+        <FiChevronLeft color="#ffffff" size={50} onClick={prevPhoto} />
+        <p>{photos[photoIndex].alias_name}</p>
+        <FiChevronRight color="#ffffff" size={50} onClick={nextPhoto} />
+      </NavigationButtons>
+
+      {/* <button type="button" onClick={closeGallery}>
         <FiXCircle color="#ffffff" />
       </button>
       <ImgContainer>
@@ -59,7 +75,7 @@ const PhotoGallery: React.FC<GalleryProps> = ({
           <FiChevronRight color="#ffffff" size={50} />
         </button>
       </ImgContainer>
-      <Description>{photos[index].alias_name}</Description>
+      <Description>{photos[index].alias_name}</Description> */}
     </Container>
   );
 };

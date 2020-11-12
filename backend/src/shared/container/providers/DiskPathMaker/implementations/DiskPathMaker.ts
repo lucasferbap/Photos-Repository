@@ -43,7 +43,14 @@ export default class DiskPathMaker implements IPathMaker {
     }
 
     public deleteFolder(pathName: string): void {
-        fs.rmdirSync(pathName);
+        fs.rmdir(pathName, { recursive: true }, err => {
+            if (err) {
+                throw err;
+            }
+
+            console.log(`${pathName} is deleted!`);
+        });
+        // fs.rmdirSync(pathName);
     }
 
     public deleteFile(pathName: string): void {

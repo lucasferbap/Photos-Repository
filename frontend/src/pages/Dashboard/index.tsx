@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FiLogOut, FiXCircle } from 'react-icons/fi';
+import { FiFolder, FiImage, FiLogOut, FiMenu, FiXCircle } from 'react-icons/fi';
 import { Form } from '@unform/web';
 
 import { useAuth } from '../../hooks/Auth';
@@ -16,16 +16,15 @@ import {
   Profile,
   Content,
   ContentHeader,
-  AddAlbumButton,
-  Albuns,
-  Album,
+  MobileMenuOpenButton,
+  MobileMenu,
   AddNewAlbum,
   EmptyRootFolder,
   AddButtons,
-  OpenAlbumButton,
 } from './styles';
 import Input from '../../components/Input';
 import { useToast } from '../../hooks/Toast';
+import { useImportImages } from '../../hooks/Import';
 
 interface Album {
   id: string;
@@ -45,6 +44,7 @@ export interface Photo {
 const Dashboard: React.FC = () => {
   const { signOut, user } = useAuth();
   const { addToast } = useToast();
+  const { openImport } = useImportImages();
 
   const [usersAlbuns, setUsersAlbuns] = useState<Album[]>([]);
 
@@ -55,6 +55,12 @@ const Dashboard: React.FC = () => {
   const [openAddNewAlbumWindow, setOpenAddNewAlbumWindow] = useState<boolean>(
     false,
   );
+
+  const [openMobileMenu, setOpenMobileMenu] = useState<boolean>(false);
+
+  const [controlMobieMenuAnimation, setControlMobieMenuAnimation] = useState<
+    boolean
+  >(false);
 
   const loadAlbuns = useCallback(async () => {
     const { data: albuns } = await api.get<Album[]>('/albuns');
@@ -71,11 +77,26 @@ const Dashboard: React.FC = () => {
   }, [user.rootFolder.folder_name]);
 
   const handleOpenAddAlbumWindow = useCallback(() => {
+    if (openMobileMenu) {
+      setOpenMobileMenu(false);
+    }
     setOpenAddNewAlbumWindow(true);
-  }, []);
+  }, [openMobileMenu]);
 
   const handleCloseAddAlbumWindow = useCallback(() => {
     setOpenAddNewAlbumWindow(false);
+  }, []);
+
+  const handleOpenMobileMenu = useCallback(() => {
+    setOpenMobileMenu(true);
+  }, []);
+
+  const handleCloseMobileMenu = useCallback(() => {
+    setControlMobieMenuAnimation(true);
+    setTimeout(() => {
+      setOpenMobileMenu(false);
+      setControlMobieMenuAnimation(false);
+    }, 500);
   }, []);
 
   const handleCreateNewAlbum = useCallback(
@@ -138,70 +159,131 @@ const Dashboard: React.FC = () => {
           <img src={user.avatar_url} alt={user.name} />
         </Profile>
       </Header>
+
       <Content>
         <ContentHeader>
           <div>
             <img src="https://img.icons8.com/dusk/64/000000/user-folder.png" />
-            <p>{user.rootFolder.alias_name}</p>
+            <h4>{user.rootFolder.alias_name}</h4>
           </div>
 
-          <AddAlbumButton>
-            <p>Novo Album</p>
+          <div>
             <button type="button" onClick={handleOpenAddAlbumWindow}>
-              <img src="https://img.icons8.com/ios/50/000000/add-folder.png" />
+              <FiFolder size={50} />
             </button>
-          </AddAlbumButton>
-        </ContentHeader>
-        <Albuns>
-          {usersAlbuns.length === 0 ? (
-            <EmptyRootFolder>
-              <p>Não há álbuns na sua pasta de fotos</p>
-              <AddButtons>
-                <p>
-                  Adicionar um novo álbum
-                  <button type="button" onClick={handleOpenAddAlbumWindow}>
-                    <img src="https://img.icons8.com/ios/50/000000/add-folder.png" />
-                  </button>
-                </p>
+            <p>Novo Album</p>
+          </div>
 
-                <p>Ou</p>
-                <p>
-                  Adicionar Fotos
-                  <button type="button">
-                    <img src="https://img.icons8.com/wired/64/000000/add-image.png" />
-                  </button>
-                </p>
-              </AddButtons>
-            </EmptyRootFolder>
-          ) : (
-            usersAlbuns.map(userAlbum => (
-              <Album key={userAlbum.id}>
+          <div>
+            <button
+              type="button"
+              onClick={() => openImport(user.rootFolder.folder_name, '')}
+            >
+              <FiImage size={50} />
+            </button>
+            <p>Adicinar novas fotos</p>
+          </div>
+        </ContentHeader>
+
+        <MobileMenuOpenButton>
+          <button type="button" onClick={handleOpenMobileMenu}>
+            <FiMenu size={30} />
+          </button>
+          <h3>Menu</h3>
+        </MobileMenuOpenButton>
+
+        {openMobileMenu && (
+          <MobileMenu disappear={controlMobieMenuAnimation}>
+            <FiXCircle
+              onClick={handleCloseMobileMenu}
+              style={{ cursor: 'pointer' }}
+            />
+            <div className="Menu-Header">
+              <img src="https://img.icons8.com/dusk/64/000000/user-folder.png" />
+              <h4>{user.rootFolder.alias_name}</h4>
+            </div>
+
+            <ul className="Menu-Options">
+              <li>
+                <button type="button" onClick={handleOpenAddAlbumWindow}>
+                  <FiFolder />
+                  <p>Novo Album</p>
+                </button>
+              </li>
+              <li>
                 <button
                   type="button"
-                  className="delete-album"
-                  onClick={
-                    () => handleDeleteAlbum(userAlbum.id, userAlbum.path_name)
-                    // eslint-disable-next-line react/jsx-curly-newline
-                  }
+                  onClick={() => {
+                    if (openMobileMenu) {
+                      setOpenMobileMenu(false);
+                    }
+                    openImport(user.rootFolder.folder_name, '');
+                  }}
                 >
-                  <FiXCircle />
+                  <FiImage />
+                  <p>Adicinar novas fotos</p>
                 </button>
+              </li>
+            </ul>
+          </MobileMenu>
+        )}
 
-                <Link to={`/album/${userAlbum.id}`}>
-                  <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
-                  <p>{userAlbum.alias_name}</p>
-                </Link>
-              </Album>
-            ))
-          )}
-        </Albuns>
+        {usersAlbuns.length === 0 ? (
+          <EmptyRootFolder>
+            <p>Não há álbuns na sua pasta de fotos</p>
+            <AddButtons>
+              <p>
+                Adicionar um novo álbum
+                <button type="button" onClick={handleOpenAddAlbumWindow}>
+                  <FiFolder size={20} />
+                </button>
+              </p>
 
+              <p>Ou</p>
+              <p>
+                Adicionar Fotos
+                <button type="button">
+                  <FiImage size={20} />
+                </button>
+              </p>
+            </AddButtons>
+          </EmptyRootFolder>
+        ) : (
+          <>
+            <div className="Spliter" />
+
+            <h3 style={{ marginTop: '10px' }}>Albuns</h3>
+            <div className="Albuns">
+              {usersAlbuns.map(album => (
+                <div key={album.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteAlbum(album.id, album.path_name)}
+                  >
+                    <FiXCircle />
+                  </button>
+
+                  <Link to={`/album/${album.id}`}>
+                    <img src="https://img.icons8.com/dusk/64/000000/pictures-folder.png" />
+                    <p>{album.alias_name}</p>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+        <div className="Spliter" />
+        <h3 style={{ marginTop: '10px' }}>Fotos</h3>
         <Image photosInfos={rootFolderPhotosInfos} />
       </Content>
 
       {openAddNewAlbumWindow && (
         <AddNewAlbum>
-          <button type="button" onClick={handleCloseAddAlbumWindow}>
+          <button
+            className="Close-Add-New-Album-Window"
+            type="button"
+            onClick={handleCloseAddAlbumWindow}
+          >
             <FiXCircle color="#ffff" size={20} />
           </button>
           <Form onSubmit={handleCreateNewAlbum}>
@@ -209,8 +291,10 @@ const Dashboard: React.FC = () => {
               name="aliasName"
               placeholder="Digite o nome do seu novo álbum"
             />
-            <button type="submit">Criar Album</button>
           </Form>
+          <button className="Create-New-Album" type="submit">
+            Criar Album
+          </button>
         </AddNewAlbum>
       )}
     </Container>

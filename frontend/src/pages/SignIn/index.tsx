@@ -45,6 +45,7 @@ const SignIn: React.FC = () => {
         });
         history.push('/dashboard');
       } catch (error) {
+        console.log(error);
         if (error instanceof yup.ValidationError) {
           error.errors.forEach(msg => {
             addToast({

@@ -85,20 +85,11 @@ const Image: React.FC<ImgProps> = ({ photosInfos, ...rest }) => {
             >
               <FiXCircle />
             </button>
-
-            <PhotoContainer>
-              <button
-                type="button"
-                className="openGallery"
-                onClick={() =>
-                  openGallery(photos, handleCalculatePhotoIndex(photo.id))
-                }
-              >
-                <div>
-                  <img src={photo.url} {...rest} />
-                </div>
-              </button>
-            </PhotoContainer>
+            <PhotoContainer
+              style={{ backgroundImage: `url("${photo.url}")` }}
+              onClick={() =>
+                openGallery(photos, handleCalculatePhotoIndex(photo.id))}
+            />
           </div>
         ))}
       </Container>
