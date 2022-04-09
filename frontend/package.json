@@ -20,7 +20,7 @@
         "date-fns": "^2.14.0",
         "fetch": "^1.1.0",
         "filesize": "^6.1.0",
-        "moment": "^2.27.0",
+        "moment": "^2.29.2",
         "polished": "^3.5.2",
         "react": "^16.13.1",
         "react-animations": "^1.0.0",
